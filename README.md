@@ -138,6 +138,102 @@ end)
 -- แท็บ Farm Kaitun
 local TabFarmKaitun = Window:NewTab("Farm kaitun")
 local SectionFarmKaitun = TabFarmKaitun:NewSection("Farm kaitun")
+
+SectionFarmKaitun:NewButton("โชว์เงิน", "ButtonInfo", function()
+    local ScreenGui = Instance.new("ScreenGui")
+local Rectangle = Instance.new("Frame")
+local MoneyLabel = Instance.new("TextLabel")
+local UserIdLabel = Instance.new("TextLabel")
+local BankLabel = Instance.new("TextLabel") -- Label สำหรับเงินในธนาคาร
+local CloseButton = Instance.new("TextButton")
+
+-- ตั้งค่า ScreenGui
+ScreenGui.Name = "MyMoneyScreenGui"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- ตั้งค่า Rectangle
+Rectangle.Name = "MyRectangle"
+Rectangle.Size = UDim2.new(0, 200, 0, 200) -- ขนาดของสี่เหลี่ยม (200x200)
+Rectangle.Position = UDim2.new(0, 0, 0.5, -100) -- ตำแหน่งกลางแนวตั้ง
+Rectangle.BackgroundColor3 = Color3.fromRGB(0, 170, 255) -- สีของสี่เหลี่ยม
+Rectangle.Parent = ScreenGui
+
+-- ตั้งค่า MoneyLabel
+MoneyLabel.Name = "MoneyLabel"
+MoneyLabel.Size = UDim2.new(1, 0, 0, 40) -- ขนาดของ MoneyLabel
+MoneyLabel.BackgroundTransparency = 1 -- ทำให้พื้นหลังโปร่งใส
+MoneyLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- สีข้อความเป็นสีขาว
+MoneyLabel.Font = Enum.Font.SourceSans
+MoneyLabel.TextSize = 24 -- ขนาดข้อความ
+MoneyLabel.Position = UDim2.new(0, 0, 0, 10) -- ตำแหน่งภายในสีเหลี่ยม
+MoneyLabel.Parent = Rectangle
+
+-- ตั้งค่า UserIdLabel
+UserIdLabel.Name = "UserIdLabel"
+UserIdLabel.Size = UDim2.new(1, 0, 0, 40) -- ขนาดของ UserIdLabel
+UserIdLabel.BackgroundTransparency = 1 -- ทำให้พื้นหลังโปร่งใส
+UserIdLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- สีข้อความเป็นสีขาว
+UserIdLabel.Font = Enum.Font.SourceSans
+UserIdLabel.TextSize = 24 -- ขนาดข้อความ
+UserIdLabel.Position = UDim2.new(0, 0, 0, 50) -- ตำแหน่งภายในสีเหลี่ยม
+UserIdLabel.Parent = Rectangle
+
+-- ตั้งค่า BankLabel
+BankLabel.Name = "BankLabel"
+BankLabel.Size = UDim2.new(1, 0, 0, 40) -- ขนาดของ BankLabel
+BankLabel.BackgroundTransparency = 1 -- ทำให้พื้นหลังโปร่งใส
+BankLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- สีข้อความเป็นสีขาว
+BankLabel.Font = Enum.Font.SourceSans
+BankLabel.TextSize = 24 -- ขนาดข้อความ
+BankLabel.Position = UDim2.new(0, 0, 0, 90) -- ตำแหน่งภายในสีเหลี่ยม
+BankLabel.Parent = Rectangle
+
+-- ตั้งค่า CloseButton
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 100, 0, 30) -- ขนาดของปุ่ม
+CloseButton.Position = UDim2.new(0.5, -50, 0, 140) -- ตำแหน่งภายในสีเหลี่ยม
+CloseButton.Text = "ปิด" -- ข้อความบนปุ่ม
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- สีพื้นหลังของปุ่ม
+CloseButton.Parent = Rectangle
+
+-- ฟังก์ชันสำหรับอัปเดตจำนวนเงิน, UserId, และเงินในธนาคาร
+local function updateInfo()
+    while true do
+        local player = game.Players.LocalPlayer -- ใช้ผู้เล่นที่รันสคริปต์
+
+        -- อัปเดตจำนวนเงิน
+        local money = player.Inventory:FindFirstChild("Money")
+        if money then
+            MoneyLabel.Text = "เงิน: " .. tostring(money.Value) -- แสดงจำนวนเงิน
+        else
+            MoneyLabel.Text = "ไม่พบข้อมูลเงิน"
+        end
+        
+        -- แสดง UserId
+        UserIdLabel.Text = "เบอร์: " .. tostring(player.UserId) -- แสดง UserId ของผู้เล่น
+
+        -- อัปเดตเงินในธนาคาร
+        local bank = player:FindFirstChild("Bank"):FindFirstChild("Bank") -- ค้นหาเงินในธนาคารของผู้เล่นที่รันสคริปต์
+        if bank then
+            BankLabel.Text = "เงินในธนาคาร: " .. tostring(bank.Value) -- แสดงเงินในธนาคาร
+        else
+            BankLabel.Text = "ไม่พบข้อมูลเงินในธนาคาร"
+        end
+        
+        wait(2) -- หยุด 2 วินาทีก่อนที่จะอัปเดตอีกครั้ง
+    end
+end
+
+-- ฟังก์ชันสำหรับปิด UI
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy() -- ปิด UI โดยการลบ ScreenGui
+end)
+
+-- เรียกใช้ฟังก์ชันเพื่อแสดงข้อมูล
+updateInfo()
+
+end)
+
 SectionFarmKaitun:NewButton("Clicked to Farmkaitun", "ButtonInfo", function()
 local hitboxMagnitude = 500 -- ระยะการตีที่ต้องการ
 
@@ -195,7 +291,7 @@ local function mainLoop()
         game:GetService("ReplicatedStorage"):WaitForChild("BankingRemotes"):WaitForChild("MainRemote"):FireServer(unpack(args))
 
         wait(1.5)
-        humanoidRootPart.CFrame = CFrame.new(-3184, 34, 3234)
+        humanoidRootPart.CFrame = CFrame.new(wd)
         wait(1.5)
         local args = {
     [1] = "Tea",
@@ -434,71 +530,84 @@ local args = {
 
         -- ฟังก์ชันสำหรับดึงจำนวนของไอเท็มที่ระบุ
         local function getItemAmount(itemName)
-            local item = player.Inventory:FindFirstChild(itemName)
-            return item and item.Value or 0
+    local item = player.Inventory:FindFirstChild(itemName)
+    return item and item.Value or 0
+end
+
+-- ตัวแปรที่ใช้ตรวจสอบว่าได้ทำการเทเลพอร์ตแล้วหรือยัง
+local teleportedItems = {
+    noTeleported = false,
+    aTeleported = false,
+    noETeleported = false,
+    ABCD = false,
+    ABCDF = false,
+    ABCDFGH = false,
+    ABCDFG = false,
+    ABCDFGO = false,
+    ABCDFGOP = false,
+    ABCDFGOPO = false
+}
+
+-- ตารางข้อมูลสำหรับไอเท็มและพิกัดการเทเลพอร์ต
+local teleportLocations = {
+    {name = "Cabbage", amount = 60, cframe = CFrame.new(-2960, 33, 92), flag = "noTeleported"},
+    {name = "Banana", amount = 50, cframe = CFrame.new(3426, 33, -227), flag = "aTeleported"},
+    {name = "Strawberry", amount = 60, cframe = CFrame.new(3409, 35, 2087), flag = "noETeleported"},
+    {name = "Apple", amount = 60, cframe = CFrame.new(2379, 37, 3164), flag = "ABCD"},
+    {name = "Orange", amount = 60, cframe = CFrame.new(4174, 34, 3484), flag = "ABCDF"},
+    {name = "Meat", amount = 60, cframe = CFrame.new(-4784, 33, 1391), flag = "ABCDFGH"},
+    {name = "Wood", amount = 60, cframe = CFrame.new(2061, 21, -406), flag = "ABCDFG"},
+    {name = "Rice", amount = 60, cframe = CFrame.new(-2533, 13, 5159), flag = "ABCDFGO"},
+    {name = "Oil", amount = 60, cframe = CFrame.new(-5152, 33, 2044), flag = "ABCDFGOP"},
+    {name = "Cactus", amount = 60, cframe = CFrame.new(857, 35, 3338), flag = "ABCDFGOPO"}
+}
+
+-- ฟังก์ชันสำหรับขายไอเท็ม
+local function sellItem(itemName, amount)
+    local args = {itemName, tostring(amount)}
+    game:GetService("ReplicatedStorage"):WaitForChild("WorldMarket_Remotes"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+end
+
+-- ฟังก์ชันรีเซ็ตสถานะการเทเลพอร์ต
+local function resetTeleportedItems()
+    for k, _ in pairs(teleportedItems) do
+        teleportedItems[k] = false
+    end
+end
+
+-- ลูปหลัก
+while true do
+    for _, teleportData in ipairs(teleportLocations) do
+        local itemAmount = getItemAmount(teleportData.name)
+        if itemAmount >= teleportData.amount and not teleportedItems[teleportData.flag] then
+            humanoidRootPart.CFrame = teleportData.cframe -- เทเลพอร์ตไปที่พิกัดที่ระบุ
+            teleportedItems[teleportData.flag] = true -- อัปเดตสถานะการเทเลพอร์ต
         end
+        wait(0.5)
+    end
 
-        -- ตัวแปรที่ใช้ตรวจสอบว่าได้ทำการเทเลพอร์ตแล้วหรือยัง
-        local teleportedItems = {
-            noTeleported = false,
-            aTeleported = false,
-            noETeleported = false,
-            ABCD = false,
-            ABCDF = false,
-            ABCDFGH = false,
-            ABCDFG = false,
-            ABCDFGO = false,
-            ABCDFGOP = false
-        }
+    -- ตรวจสอบว่าได้เทเลพอร์ตไปพิกัดสุดท้ายแล้วหรือไม่
+    if teleportedItems["ABCDFGOPO"] then
+        -- รันคำสั่งขายไอเท็ม
+        sellItem("Watermelon", 60)
+        sellItem("Apple", 60)
+        sellItem("Strawberry", 60)
+        sellItem("Orange", 60)
+        sellItem("Wood", 60)
+        sellItem("Banana", 50)
+        sellItem("Meat", 60)
+        sellItem("Cabbage", 60)
+        sellItem("Rice", 60)
+        sellItem("Oil", 60)
+        sellItem("Cactus", 60)
+        
+        -- รีเซ็ตสถานะการเทเลพอร์ต
+        resetTeleportedItems()
+    end
 
-        -- ตารางข้อมูลสำหรับไอเท็มและพิกัดการเทเลพอร์ต
-        local teleportLocations = {
-            {name = "Cabbage", amount = 60, cframe = CFrame.new(-2960, 33, 92), flag = "noTeleported"},
-            {name = "Banana", amount = 50, cframe = CFrame.new(3426, 33, -227), flag = "aTeleported"},
-            {name = "Strawberry", amount = 60, cframe = CFrame.new(3409, 35, 2087), flag = "noETeleported"},
-            {name = "Apple", amount = 60, cframe = CFrame.new(2379, 37, 3164), flag = "ABCD"},
-            {name = "Orange", amount = 60, cframe = CFrame.new(4174, 34, 3484), flag = "ABCDF"},
-            {name = "Meat", amount = 60, cframe = CFrame.new(-4784, 33, 1391), flag = "ABCDFGH"},
-            {name = "Wood", amount = 60, cframe = CFrame.new(2061, 21, -406), flag = "ABCDFG"},
-            {name = "Rice", amount = 60, cframe = CFrame.new(-2533, 13, 5159), flag = "ABCDFGO"},
-            {name = "Oil", amount = 60, cframe = CFrame.new(857, 35, 3338), flag = "ABCDFGOP"}
-        }
+    wait(1) -- ดีเลย์เล็กน้อยเพื่อป้องกันการใช้ CPU สูงเกินไป
+end
 
-        -- ฟังก์ชันสำหรับขายไอเท็ม
-        local function sellItem(itemName, amount)
-            local args = {itemName, tostring(amount)}
-            game:GetService("ReplicatedStorage"):WaitForChild("WorldMarket_Remotes"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
-        end
-
-        -- ลูปหลัก
-        while true do
-            for _, teleportData in ipairs(teleportLocations) do
-                local itemAmount = getItemAmount(teleportData.name)
-                if itemAmount >= teleportData.amount and not teleportedItems[teleportData.flag] then
-                    humanoidRootPart.CFrame = teleportData.cframe -- เทเลพอร์ตไปที่พิกัดที่ระบุ
-                    teleportedItems[teleportData.flag] = true -- อัปเดตสถานะการเทเลพอร์ต
-                end
-                wait(0.5)
-            end
-
-            -- ตรวจสอบว่าได้เทเลพอร์ตไปพิกัดสุดท้ายแล้วหรือไม่
-            if teleportedItems["ABCDFGOP"] then
-                -- รันคำสั่งขายไอเท็ม
-                sellItem("Watermelon", 60)
-                sellItem("Apple", 60)
-                sellItem("Strawberry", 60)
-                sellItem("Orange", 60)
-                sellItem("Wood", 60)
-                sellItem("Banana", 50)
-                sellItem("Meat", 60)
-                sellItem("Cabbage", 60)
-                sellItem("Rice", 60)
-                sellItem("Oil", 60)
-                break -- ออกจากลูปเมื่อทุกเงื่อนไขถูกต้อง
-            end
-
-            wait(1) -- ดีเลย์เล็กน้อยเพื่อป้องกันการใช้ CPU สูงเกินไป
-        end
     end
 end
 
