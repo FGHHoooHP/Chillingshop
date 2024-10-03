@@ -231,3 +231,4 @@ Toggle:OnChanged(function(state)
         end)()  -- เริ่ม coroutine เพื่อรันการขายในแบ็คกราวด์
     end
 end)
+  
